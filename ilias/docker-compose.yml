@@ -1,0 +1,31 @@
+ilias54x:
+    image: sturai/ilias:5.4-php7.3-apache
+    restart: always
+    links:
+     - mysql
+    expose:
+     - 80
+    environment:
+     - "VIRTUAL_HOST=ilias.localhost"
+#     - "LETSENCRYPT_HOST=con01.elsa.uni-hannover.de"
+#     - "LETSENCRYPT_EMAIL=asbih@elsa.uni-hannover.de"
+     - "ILIAS_AUTO_SETUP=1"
+     - "ILIAS_DB_USER=root"
+     - "ILIAS_DB_PASSWORD=testing"
+    volumes:
+     - ./ILIAS/data:/var/www/html/data
+     - ./ILIAS/plugins/SystemNotifications:/var/www/html/Customizing/global/plugins/Services/UIComponent/UserInterfaceHook/SystemNotifications
+     - ./ILIAS/plugins/CountdownTimer:/var/www/html/Customizing/global/plugins/Services/UIComponent/UserInterfaceHook/CountdownTimer
+     - ./extern:/var/iliasdata/ilias
+     - ./etc/php.ini:/usr/local/etc/php/php.ini
+mysql:
+    image: mysql:5.7
+    restart: always
+    command: |
+      --character-set-server=utf8
+      --collation-server=utf8_general_ci
+    environment:
+     - "MYSQL_DATABASE=ilias"
+     - "MYSQL_ROOT_PASSWORD=testing"
+    volumes:
+     - ./mysql:/var/lib/mysql
